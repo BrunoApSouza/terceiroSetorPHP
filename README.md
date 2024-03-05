@@ -1,3 +1,1 @@
-# mba-cod-disciplina-turma-grupo-numero
-
-Grupo número da disciplina de XXX - Bootcamp
+# mba-es-26-grupo-02
