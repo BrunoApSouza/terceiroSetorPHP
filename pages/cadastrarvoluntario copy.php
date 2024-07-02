@@ -11,8 +11,7 @@ if(isset($_POST['enviar'])) {
     $telefone = $mysqli->escape_string($_POST['telefone']);
     $profissao = $mysqli->escape_string($_POST['profissao']);
     $beneficiario = $mysqli->escape_string($_POST['beneficiario']);
-    $idusuario = isset($_POST['idusuario']) && is_numeric($_POST['idusuario']) ? intval($_POST['idusuario']) : null;
-
+    
     $erro = array();
     if(empty($nome))
         $erro[] = "nome";
@@ -28,7 +27,6 @@ if(isset($_POST['enviar'])) {
 
     if(empty($beneficiario))
         $erro[] = "beneficiario";
-
 
     /* ===TRATAMENTO DE IMAGEM - ACHEI MELHOR TIRAR PARA NÃO DEIXAR OBRIGATORIO A QUESTÃO DA IMAGEM
     if(!isset($_FILES) || !isset($_FILES['imagem']) || $_FILES['imagem']['size'] == 0)
@@ -52,15 +50,14 @@ if(isset($_POST['enviar'])) {
         $deu_certo = enviarArquivo($_FILES['imagem']['error'], $_FILES['imagem']['size'], $_FILES['imagem']['name'], $_FILES['imagem']['tmp_name']);
         if($deu_certo !== false) {
         */
-        $sql_code = "INSERT INTO voluntario (nome, email, telefone, profissao, beneficiario, imagem, datacadastro, idusuario) VALUES(
+        $sql_code = "INSERT INTO voluntario (nome, email, telefone, profissao, beneficiario, imagem, datacadastro) VALUES(
                 '$nome',
                 '$email',
                 '$telefone',
                 '$profissao',
                 '$beneficiario',
                 '$deu_certo',
-                 NOW(),
-                '$idusuario'    
+                NOW()
             )";
             $inserido = $mysqli->query($sql_code);
             if(!$inserido)
@@ -152,12 +149,6 @@ if(isset($_POST['enviar'])) {
                                 <div class="form-group">
                                     <label for="">Beneficiario</label>
                                     <input type="text" name="beneficiario" class="form-control">
-                                </div>  
-                            </div>
-                            <div class="col-lg-2">
-                                <div class="form-group">
-                                    <label for="">ID usuário</label>
-                                    <input type="number" name="idusuario" class="form-control">
                                 </div>  
                             </div>
                             <div class="col-lg-8">

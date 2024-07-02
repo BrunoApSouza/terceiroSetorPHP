@@ -1,9 +1,5 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 include('lib/protect.php');
 protect(0);
 
@@ -15,32 +11,26 @@ $erro = false;
 
 if(isset($_POST['adquirir'])) {
 
-    //mensagem de log
+    // verificar se o usuario possui creditos para compra-lo
     error_log('Solicitação de adquirir parceiro iniciada'); 
 
     //sessão user
     $idusuario = $_SESSION['usuario'];
 
-    //coleta as informações
-    $idparceiro = intval($_POST['adquirir']);
+    //
+    $idparceiro= intval($_POST['adquirir']);
     $sql_query_parceiro = $mysqli->query("SELECT id FROM parceiro WHERE id = '$idparceiro'") or die($mysqli->error);
     $parceiro = $sql_query_parceiro->fetch_assoc();
-    //
-    $tipoajuda = intval($_POST['adquirir']);
-    $sql_query_tipoajuda = $mysqli->query("SELECT tipoajuda FROM parceiro WHERE id = '$idparceiro'") or die($mysqli->error);
-    $parceiro = $sql_query_tipoajuda->fetch_assoc();
-    //
-    /*
-    $idvoluntario = intval($_POST['adquirir']);
-    $sql_query_idvoluntario = $mysqli->query("SELECT id FROM voluntario WHERE id = '$idvoluntario'") or die($mysqli->error);
-    $parceiro = $sql_query_idvoluntario->fetch_assoc();
-    */
-    $idvoluntario = intval($_POST['adquirir']);
-    $sql_query_idvoluntario = $mysqli->query("SELECT v.id from voluntario v JOIN usuarios u ON v.idusuario = u.id where v.idusuario = '$idusuario'") or die($mysqli->error);
-    $idvoluntario = $sql_query_idvoluntario->fetch_assoc()['id'];
-    
 
-    //inseri o a acão feita
+    $tipoajuda= intval($_POST['adquirir']);
+    $sql_query_parceiro = $mysqli->query("SELECT tipoajuda FROM parceiro WHERE tipoajuda = '$tipoajuda'") or die($mysqli->error);
+    $parceiro = $sql_query_parceiro->fetch_assoc();
+
+    $idvoluntario= intval($_POST['adquirir']);
+    $sql_query_parceiro= $mysqli->query("SELECT id FROM voluntario WHERE id = '$idvoluntario'") or die($mysqli->error);
+    $parceiro = $sql_query_parceiro->fetch_assoc();
+
+    //inseri o a acao feira
     $mysqli->query("INSERT INTO acaofeita (idusuario, idparceiro, nomeacaofeita, dataacaoescolha, idvoluntario) VALUES(
         '$idusuario',
         '$idparceiro',
@@ -98,19 +88,17 @@ $parceiro_query = $mysqli->query("SELECT * FROM parceiro WHERE id NOT IN (SELECT
         <div class="col-sm-4">
             <div class="card">
                 <div class="card-header">
-                    <h5><?php echo $parceiro['id']; ?></h5>
                     <h5><?php echo $parceiro['nome']; ?></h5>
-                    
                 </div>
                 <div class="card-block">
                     <!--
-                        <img src="<?php echo $parceiro['imagem']; ?>" class="img-fluid mb-3" alt="">
+                    <img src="<?php echo $parceiro['imagem']; ?>" class="img-fluid mb-3" alt="">
                     -->
                     <p>
-                        <?php echo $parceiro['tipoajuda']; ?>
+                    <?php echo $parceiro['tipoajuda']; ?>
                     </p>
                     <p>
-                        <?php echo $parceiro['email']; ?>
+                    <?php echo $parceiro['email']; ?>
                     </p>
                     <form action="" method="post">
                         <button type="submit" name="adquirir" value="<?php echo $parceiro['id']; ?>" class="btn form-control btn-out-dashed btn-success btn-square" style="background-color: #CC7E65;">SOLICITAR</button>   
@@ -119,5 +107,6 @@ $parceiro_query = $mysqli->query("SELECT * FROM parceiro WHERE id NOT IN (SELECT
             </div>
         </div>
         <?php } ?>
+        
     </div>
 </div>
